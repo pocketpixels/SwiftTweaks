@@ -78,6 +78,13 @@ internal final class TweakTableCell: UITableViewCell {
 		stepperControl.addTarget(self, action: #selector(self.stepperChanged(_:)), for: .valueChanged)
 		textField.delegate = self
 
+        if let label = textLabel {
+            let doubleTapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.resetToDefault))
+            doubleTapRecognizer.numberOfTapsRequired = 2
+            label.isUserInteractionEnabled = true
+            label.addGestureRecognizer(doubleTapRecognizer)
+        }
+        
 		detailTextLabel!.textColor = AppTheme.Colors.textPrimary
 	}
 
@@ -253,6 +260,8 @@ internal final class TweakTableCell: UITableViewCell {
 		textField.isUserInteractionEnabled = textFieldEnabled
 		textField.textColor = textFieldEnabled ? AppTheme.Colors.textPrimary : AppTheme.Colors.controlSecondary
 
+        textLabel?.textColor = viewData.differsFromDefault ? AppTheme.Colors.textNonDefaultValue : AppTheme.Colors.textPrimary
+
 	}
 
 	private func updateStepper(value: Double, stepperValues: TweakViewData.StepperValues) {
@@ -289,6 +298,25 @@ internal final class TweakTableCell: UITableViewCell {
 			assertionFailure("Shouldn't be able to update text field with a Color or Boolean or StringList tweak.")
 		}
 	}
+    
+    @objc private func resetToDefault() {
+        guard viewData!.differsFromDefault else { return }
+        switch viewData! {
+        case let .integer(_, defaultValue: defaultValue, min: min, max: max, stepSize: step):
+            viewData = TweakViewData(type: .integer, value: defaultValue, defaultValue: defaultValue, minimum: min, maximum: max, stepSize: step, options: nil)
+        case let .float(_, defaultValue: defaultValue, min: min, max: max, stepSize: step):
+            viewData = TweakViewData(type: .cgFloat, value: defaultValue, defaultValue: defaultValue, minimum: min, maximum: max, stepSize: step, options: nil)
+        case let .doubleTweak(_, defaultValue: defaultValue, min: min, max: max, stepSize: step):
+            viewData = TweakViewData(type: .double, value: defaultValue, defaultValue: defaultValue, minimum: min, maximum: max, stepSize: step, options: nil)
+        case let .boolean(_, defaultValue: defaultValue):
+            viewData = TweakViewData(type: .boolean, value: defaultValue, defaultValue: defaultValue, minimum: nil, maximum: nil, stepSize: nil, options: nil)
+        case let .color(_, defaultValue: defaultValue):
+            viewData = TweakViewData(type: .uiColor, value: defaultValue, defaultValue: defaultValue, minimum: nil, maximum: nil, stepSize: nil, options: nil)
+        case let .stringList(_, defaultValue: defaultValue, options: options):
+            viewData = TweakViewData(type: .stringList, value: defaultValue, defaultValue: defaultValue, minimum: nil, maximum: nil, stepSize: nil, options: options)
+        }
+        delegate?.tweakCellDidChangeCurrentValue(self)
+    }
 }
 
 extension TweakTableCell: UITextFieldDelegate {

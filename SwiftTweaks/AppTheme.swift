@@ -30,7 +30,8 @@ internal struct AppTheme {
 		static let sectionHeaderTitleColor = Palette.grayColor
 
 		static let textPrimary = Palette.blackColor
-
+        static let textNonDefaultValue = Palette.tintColor
+        
 		static let controlTinted = Palette.tintColor
 		static let controlTintedPressed = Palette.tintColorPressed
 		static let controlDisabled = Palette.secondaryControl

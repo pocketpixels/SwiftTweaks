@@ -70,29 +70,40 @@ internal enum TweakViewData {
 
 	var stringRepresentation: (String, Bool) {
 		let string: String
-		let differsFromDefault: Bool
 		switch self {
-		case let .boolean(value: value, defaultValue: defaultValue):
+		case let .boolean(value: value, defaultValue: _):
 			string = value ? "Bool(true)" : "Bool(false)"
-			differsFromDefault = (value != defaultValue)
-		case let .integer(value: value, defaultValue: defaultValue, _, _, _):
+		case let .integer(value: value, _, _, _, _):
 			string = "Int(\(value))"
-			differsFromDefault = (value != defaultValue)
-		case let .float(value: value, defaultValue: defaultValue, _, _, _):
+		case let .float(value: value, _, _, _, _):
 			string = "Float(\(value))"
-			differsFromDefault = (value != defaultValue)
-		case let .doubleTweak(value: value, defaultValue: defaultValue, _, _, _):
+		case let .doubleTweak(value: value, _, _, _, _):
 			string = "Double(\(value))"
-			differsFromDefault = (value != defaultValue)
-		case let .color(value: value, defaultValue: defaultValue):
+		case let .color(value: value, _):
 			string = "Color(\(value.hexString), alpha: \(value.alphaValue))"
-			differsFromDefault = (value != defaultValue)
-		case let .stringList(value: value, defaultValue: defaultValue, _):
+		case let .stringList(value: value, _, _):
 			string = value.value
-			differsFromDefault = string != defaultValue.value
 		}
 		return (string, differsFromDefault)
 	}
+
+    var differsFromDefault: Bool {
+        switch self {
+        case let .boolean(value: value, defaultValue: defaultValue):
+            return (value != defaultValue)
+        case let .integer(value: value, defaultValue: defaultValue, _, _, _):
+            return (value != defaultValue)
+        case let .float(value: value, defaultValue: defaultValue, _, _, _):
+            return (value != defaultValue)
+        case let .doubleTweak(value: value, defaultValue: defaultValue, _, _, _):
+            return (value != defaultValue)
+        case let .color(value: value, defaultValue: defaultValue):
+            return (value != defaultValue)
+        case let .stringList(value: value, defaultValue: defaultValue, _):
+            let string = value.value
+            return string != defaultValue.value
+        }
+    }
 
 	private var isSignedNumberType: Bool {
 		switch self {
