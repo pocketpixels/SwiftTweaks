@@ -200,7 +200,7 @@ extension TweakWindow: FloatingTweaksWindowPresenter {
 		let floatingTweaksVC = FloatingTweakGroupViewController(frame: floatingTweakGroupFrame, tweakStore: tweakStore, presenter: self)
 		floatingTweaksVC.tweakGroup = tweakGroup
 		window.rootViewController = floatingTweaksVC
-		window.addSubview(floatingTweaksVC.view)
+//		window.addSubview(floatingTweaksVC.view)
 
 		window.alpha = 0
 		let initialWindowFrame = window.frame.offsetBy(dx: 0, dy: floatingTweaksVC.view.bounds.height)

@@ -76,6 +76,7 @@ internal final class FloatingTweakGroupViewController: UIViewController {
 
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
+        view.frame = fullFrame
 
 		layoutSubviews()
 	}
